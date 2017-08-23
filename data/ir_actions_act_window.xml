@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Window action for CBM tree view-->
+    <record model="ir.actions.act_window" id="tmd_action_cbm_tree">
+      <field name="name">CBM at Ports</field>
+      <field name="res_model">stock.quant</field>
+      <field name="auto_search" eval="True"/>
+      <field name="context">{'search_default_internal_loc':1,'group_by':['location_id']}</field>
+      <field name="domain">[('qty','&gt;',0),('company_id','=',8)]</field>
+      <field name="limit">80</field>
+      <field name="src_model" eval="False"/>
+      <field name="target">current</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="usage" eval="False"/>
+      <field name="view_id" ref="tmd_custo_ps.tmd_quant_tree_cbm"/>
+      <field name="view_ids" eval="[(6, 0, [])]"/>
+      <field name="view_mode">tree,form,pivot</field>
+    </record>
+</odoo>

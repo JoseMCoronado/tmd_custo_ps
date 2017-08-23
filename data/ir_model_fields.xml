@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data noupdate="1">
+    <!--NEW FIELDS (NON COMPUTED)-->
+    <record model="ir.model.fields" id="tmd_product_length">
+        <field name="field_description">Length (cm)</field>
+        <field name="name">x_length</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_width">
+        <field name="field_description">Width (cm)</field>
+        <field name="name">x_width</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_height">
+        <field name="field_description">Height (cm)</field>
+        <field name="name">x_height</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_lc_factor">
+        <field name="field_description">Landed Cost Factor</field>
+        <field name="name">x_lc_factor</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_sales_specialist">
+        <field name="field_description">Sales Support Specialist</field>
+        <field name="name">x_sales_support</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="relation">res.users</field>
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">many2one</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_qty_package">
+        <field name="field_description">Master Pack Quantity</field>
+        <field name="name">x_qty_package</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_inner_qty_package">
+        <field name="field_description">Inner Pack Quantity</field>
+        <field name="name">x_inner_qty_package</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <record model="ir.model.fields" id="tmd_product_item_weight">
+        <field name="field_description">Item Weight (lbs)</field>
+        <field name="name">x_item_weight</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="ttype">float</field>
+    </record>
+    <!--COMPUTED FIELDS-->
+    <record model="ir.model.fields" id="tmd_product_cbm">
+        <field name="field_description">CBM</field>
+        <field name="name">x_cbm</field>
+        <field name="model">product.template</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="readonly" eval="True"/>
+        <field name="ttype">float</field>
+        <field name="depends">x_length,x_width,x_height,x_qty_package</field>
+        <field name="compute"><![CDATA[for record in self:
+          record['x_cbm'] = (record.x_length*record.x_width*record.x_height)/1000000
+          ]]></field>
+    </record>
+    <record model="ir.model.fields" id="tmd_quant_volume">
+        <field name="field_description">Volume (CBM)</field>
+        <field name="name">x_volume</field>
+        <field name="model">stock.quant</field>
+        <field name="model_id" ref="stock.model_stock_quant"/>
+        <field name="on_delete">set null</field>
+        <field name="selectable" eval="True"/>
+        <field name="state">manual</field>
+        <field name="store" eval="True"/>
+        <field name="readonly" eval="True"/>
+        <field name="ttype">float</field>
+        <field name="depends">product_id.x_cbm,qty,cost</field>
+        <field name="compute"><![CDATA[for record in self:
+          if record.product_id.x_qty_package != 0:
+            record['x_volume'] = (record.qty/record.product_id.x_qty_package) * record.product_id.x_cbm
+          ]]></field>
+    </record>
+  </data>
+</odoo>
